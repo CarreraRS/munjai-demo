@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Munjai - Secure Escrow Service</title>
+    <title>Munjai — ระบบตัวกลางรับเงินปลอดภัย (Escrow)</title>
+    <meta name="description" content="Munjai ตัวกลางพักเงินซื้อขายออนไลน์ ผู้ขายได้เงินชัวร์ ผู้ซื้อได้ของจริง">
+    <meta name="theme-color" content="#0B1120">
+    <link rel="icon" href="./munjai.png">
     <!-- Tailwind & Fonts -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -73,18 +76,19 @@
                     <span class="material-symbols-outlined hidden dark:block text-slate-300">light_mode</span>
                 </button>
                 <div id="role-badge" class="hidden sm:flex px-3 py-1.5 rounded-full text-xs font-bold items-center gap-1.5"></div>
-                <div class="h-8 w-8 rounded-full bg-primary/20 border-2 border-primary/50 overflow-hidden ml-2 hidden sm:block">
-                    <img src="https://placehold.co/100x100/0066FF/FFFFFF?text=U" class="w-full h-full object-cover">
-                </div>
+                <div id="avatar" class="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-indigo-500 text-white text-xs font-bold items-center justify-center ml-2 hidden sm:flex ring-2 ring-primary/30">DS</div>
             </div>
         </div>
     </header>
 
     <main id="app-container" class="flex-1 flex flex-col w-full max-w-[1440px] mx-auto p-4 md:p-8 animate-fade-in"></main>
 
-    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end group shadow-2xl">
+    <div id="demo-panel" class="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-50 flex flex-col items-end">
+        <button id="demo-fab" onclick="app.toggleDemo()" class="hidden size-12 rounded-full bg-secondary text-white shadow-2xl items-center justify-center border border-slate-700 hover:scale-105 transition" title="ตัวเลือก Demo"><span class="material-symbols-outlined">tune</span></button>
+        <div id="demo-body" class="flex flex-col items-end shadow-2xl">
         <div class="bg-secondary dark:bg-black text-white text-[10px] uppercase tracking-wider px-4 py-1.5 rounded-t-xl font-bold border-b border-slate-700 opacity-90">
             ตัวเลือกโหมดสำหรับ Demo
+            <button onclick="app.toggleDemo()" class="ml-2 align-middle opacity-70 hover:opacity-100"><span class="material-symbols-outlined text-[14px] align-middle">close</span></button>
         </div>
         <div class="bg-white dark:bg-card-dark p-2 rounded-b-xl rounded-tl-xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col gap-1 w-56">
             <button onclick="app.switchRole('seller')" id="btn-demo-seller" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200">
@@ -101,7 +105,17 @@
                 <span class="material-symbols-outlined text-[16px]">link</span> จำลองผู้ซื้อกดลิงก์จ่ายเงิน
             </button>
         </div>
+        </div>
     </div>
+
+    <nav id="mobile-nav" class="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-background-dark/95 glass-nav border-t border-slate-200 dark:border-border-dark flex px-2 pb-[env(safe-area-inset-bottom)]"></nav>
+
+    <footer class="border-t border-slate-200 dark:border-border-dark mt-8 pb-20 md:pb-0">
+        <div class="max-w-[1440px] mx-auto px-4 md:px-8 py-6 flex flex-col sm:flex-row gap-3 justify-between text-xs text-slate-500">
+            <p>© 2026 Munjai Co., Ltd. · ระบบตัวกลางรับเงิน (Escrow) ที่คุณมั่นใจ</p>
+            <div class="flex gap-4"><a href="javascript:void(0)" class="hover:text-primary">เงื่อนไขการใช้บริการ</a><a href="javascript:void(0)" class="hover:text-primary">นโยบายความเป็นส่วนตัว</a><a href="javascript:void(0)" class="hover:text-primary">ติดต่อเรา</a></div>
+        </div>
+    </footer>
 
     <div id="toast-container" class="fixed top-20 right-4 z-[100] flex flex-col gap-2 pointer-events-none"></div>
     <div id="modals-container"></div>
@@ -120,9 +134,9 @@
                         status: 'shipped', buyer: 'คุณเอ สุขใจ', seller: '@DigitalStore_TH', sellerId: 'S1',
                         trackingNo: 'TH123456789EX', courier: 'Kerry',
                         timeline: [
-                            { status: 'created', time: '24 ต.ค. 2566, 10:30 น.' },
-                            { status: 'paid', time: '24 ต.ค. 2566, 11:45 น.' },
-                            { status: 'shipped', time: '25 ต.ค. 2566, 09:15 น.' }
+                            { status: 'created', time: '24 ต.ค. 2569, 10:30 น.' },
+                            { status: 'paid', time: '24 ต.ค. 2569, 11:45 น.' },
+                            { status: 'shipped', time: '25 ต.ค. 2569, 09:15 น.' }
                         ]
                     },
                     { 
@@ -139,8 +153,8 @@
                         status: 'awaiting_shipment', buyer: 'น้องเจน', seller: '@TicketMaster', sellerId: 'S1',
                         deadline: Date.now() + (1 * 24 * 60 * 60 * 1000), extensionReq: { days: 7, reason: 'ทางเว็บเลื่อนวันจัดส่งบัตรครับ', status: 'pending' },
                         timeline: [
-                            { status: 'created', time: '20 ต.ค. 2566' },
-                            { status: 'paid', time: '20 ต.ค. 2566' }
+                            { status: 'created', time: '20 ต.ค. 2569' },
+                            { status: 'paid', time: '20 ต.ค. 2569' }
                         ]
                     },
                     { 
@@ -148,20 +162,20 @@
                         status: 'completed', buyer: 'คุณแพรว', seller: '@BrandnameAuth', sellerId: 'S1',
                         isReviewed: false,
                         timeline: [
-                            { status: 'created', time: '10 ต.ค. 2566' },
-                            { status: 'paid', time: '10 ต.ค. 2566' },
-                            { status: 'shipped', time: '12 ต.ค. 2566' },
-                            { status: 'completed', time: '14 ต.ค. 2566' }
+                            { status: 'created', time: '10 ต.ค. 2569' },
+                            { status: 'paid', time: '10 ต.ค. 2569' },
+                            { status: 'shipped', time: '12 ต.ค. 2569' },
+                            { status: 'completed', time: '14 ต.ค. 2569' }
                         ]
                     },
                     { 
                         id: 'ORD-992105', title: 'การ์ดจอ RTX 4080 (มือสอง)', price: 28000, fee: 840, 
                         status: 'disputed', buyer: 'คุณบอย', seller: '@PC_Parts_TH', sellerId: 'S1',
                         timeline: [
-                            { status: 'created', time: '18 ต.ค. 2566' },
-                            { status: 'paid', time: '18 ต.ค. 2566' },
-                            { status: 'shipped', time: '19 ต.ค. 2566' },
-                            { status: 'disputed', time: '21 ต.ค. 2566' }
+                            { status: 'created', time: '18 ต.ค. 2569' },
+                            { status: 'paid', time: '18 ต.ค. 2569' },
+                            { status: 'shipped', time: '19 ต.ค. 2569' },
+                            { status: 'disputed', time: '21 ต.ค. 2569' }
                         ]
                     }
                 ],
@@ -171,15 +185,22 @@
                     { sender: 'seller', text: 'ก่อนส่งผมถ่ายวิดีโอไว้ ไม่มีรอยนะครับ น่าจะเกิดจากการขนส่ง', time: '10:45 น.' }
                 ],
                 reviews: [
-                    { id: 'R1', buyer: 'คุณแม็ค', rating: 5, comment: 'ส่งไวมาก ของแพ็คมาดีเยี่ยมครับ', date: '10 ต.ค. 2566', reported: false },
-                    { id: 'R2', buyer: 'คุณจอย', rating: 4, comment: 'สินค้าตรงปกค่ะ แต่ตอบแชทช้านิดนึง', date: '12 ต.ค. 2566', reported: false }
+                    { id: 'R1', buyer: 'คุณแม็ค', rating: 5, comment: 'ส่งไวมาก ของแพ็คมาดีเยี่ยมครับ', date: '10 ต.ค. 2569', reported: false },
+                    { id: 'R2', buyer: 'คุณจอย', rating: 4, comment: 'สินค้าตรงปกค่ะ แต่ตอบแชทช้านิดนึง', date: '12 ต.ค. 2569', reported: false }
                 ]
             },
 
             init() {
                 this.applyTheme();
                 this.switchRole('seller');
+                if (window.innerWidth < 768) this.toggleDemo();
                 setInterval(() => this.updateCountdowns(), 1000);
+            },
+
+            toggleDemo() {
+                const b = document.getElementById('demo-body'), f = document.getElementById('demo-fab');
+                const hide = !b.classList.contains('hidden');
+                b.classList.toggle('hidden', hide); f.classList.toggle('hidden', !hide); f.classList.toggle('flex', hide);
             },
 
             toggleTheme() {
@@ -227,29 +248,38 @@
 
                 if (this.state.role === 'seller') {
                     nav.innerHTML = `
-                        <a href="#" onclick="app.navigate('dashboard')" class="${linkCls('dashboard')}">แดชบอร์ดการขาย</a>
-                        <a href="#" onclick="app.navigate('create')" class="${linkCls('create')}">สร้างดีลใหม่</a>
-                        <a href="#" onclick="app.navigate('wallet')" class="${linkCls('wallet')}">กระเป๋าเงิน</a>
-                        <a href="#" onclick="app.navigate('reviews')" class="${linkCls('reviews')}">รีวิวของฉัน</a>
+                        <a href="javascript:void(0)" onclick="app.navigate('dashboard')" class="${linkCls('dashboard')}">แดชบอร์ดการขาย</a>
+                        <a href="javascript:void(0)" onclick="app.navigate('create')" class="${linkCls('create')}">สร้างดีลใหม่</a>
+                        <a href="javascript:void(0)" onclick="app.navigate('wallet')" class="${linkCls('wallet')}">กระเป๋าเงิน</a>
+                        <a href="javascript:void(0)" onclick="app.navigate('reviews')" class="${linkCls('reviews')}">รีวิวของฉัน</a>
                     `;
                     badge.innerHTML = `<span class="material-symbols-outlined text-[16px] text-primary">store</span> ผู้ขาย (Seller)`;
                     badge.className = "hidden sm:flex px-3 py-1.5 rounded-full text-xs font-bold items-center gap-1.5 bg-primary/10 text-primary border border-primary/20";
                 } else if (this.state.role === 'buyer') {
                     nav.innerHTML = `
-                        <a href="#" onclick="app.navigate('dashboard')" class="${linkCls('dashboard')}">รายการซื้อของฉัน</a>
-                        <a href="#" onclick="app.navigate('wallet')" class="${linkCls('wallet')}">กระเป๋าเงิน</a>
-                        <a href="#" onclick="app.navigate('blacklist')" class="${linkCls('blacklist')}">เช็คประวัติแบล็คลิสต์</a>
+                        <a href="javascript:void(0)" onclick="app.navigate('dashboard')" class="${linkCls('dashboard')}">รายการซื้อของฉัน</a>
+                        <a href="javascript:void(0)" onclick="app.navigate('wallet')" class="${linkCls('wallet')}">กระเป๋าเงิน</a>
+                        <a href="javascript:void(0)" onclick="app.navigate('blacklist')" class="${linkCls('blacklist')}">เช็คประวัติแบล็คลิสต์</a>
                     `;
                     badge.innerHTML = `<span class="material-symbols-outlined text-[16px] text-success">shopping_bag</span> ผู้ซื้อ (Buyer)`;
                     badge.className = "hidden sm:flex px-3 py-1.5 rounded-full text-xs font-bold items-center gap-1.5 bg-success/10 text-success border border-success/20";
                 } else {
                     nav.innerHTML = `
-                        <a href="#" onclick="app.navigate('admin_dash')" class="${linkCls('admin_dash')}">ศูนย์ไกล่เกลี่ย (Disputes)</a>
-                        <a href="#" onclick="app.navigate('admin_ext')" class="${linkCls('admin_ext')}">คำร้องขอขยายเวลา</a>
+                        <a href="javascript:void(0)" onclick="app.navigate('admin_dash')" class="${linkCls('admin_dash')}">ศูนย์ไกล่เกลี่ย (Disputes)</a>
+                        <a href="javascript:void(0)" onclick="app.navigate('admin_ext')" class="${linkCls('admin_ext')}">คำร้องขอขยายเวลา</a>
                     `;
                     badge.innerHTML = `<span class="material-symbols-outlined text-[16px] text-danger">shield_person</span> Admin Support`;
                     badge.className = "hidden sm:flex px-3 py-1.5 rounded-full text-xs font-bold items-center gap-1.5 bg-danger/10 text-danger border border-danger/20";
                 }
+                const icons = { dashboard: 'space_dashboard', create: 'add_circle', wallet: 'account_balance_wallet', reviews: 'star', blacklist: 'gpp_maybe', admin_dash: 'gavel', admin_ext: 'more_time' };
+                const mnav = document.getElementById('mobile-nav');
+                if (mnav) mnav.innerHTML = [...nav.querySelectorAll('a')].map(a => {
+                    const v = a.getAttribute('onclick').match(/'(\w+)'/)[1];
+                    const on = a.className.includes('text-primary bg-primary/10');
+                    return `<a href="javascript:void(0)" onclick="app.navigate('${v}')" class="flex-1 flex flex-col items-center gap-0.5 py-2 text-[10px] font-semibold ${on ? 'text-primary' : 'text-slate-500'}"><span class="material-symbols-outlined ${on ? 'icon-fill' : ''}">${icons[v]}</span><span class="truncate max-w-full">${a.textContent.replace(/\(.*\)/, '').trim()}</span></a>`;
+                }).join('');
+                const av = document.getElementById('avatar');
+                if (av) av.textContent = { seller: 'DS', buyer: 'KA', admin: 'AD' }[this.state.role];
             },
 
             formatMoney: (num) => `฿${num.toLocaleString('th-TH', {minimumFractionDigits: 2})}`,
@@ -319,7 +349,7 @@
                                 <span class="text-sm font-semibold text-slate-500 uppercase tracking-wider">เงินรอโอน (Escrow)</span>
                                 <span class="material-symbols-outlined text-primary p-2 bg-primary/10 rounded-lg">lock</span>
                             </div>
-                            <p class="text-3xl font-black text-slate-900 dark:text-white">฿32,500.00</p>
+                            <p class="text-3xl font-black text-slate-900 dark:text-white">${this.formatMoney(this.state.orders.filter(o=>['awaiting_shipment','shipped','disputed'].includes(o.status)).reduce((a,o)=>a+o.price-o.fee,0))}</p>
                         </div>
                         <div class="rounded-2xl p-6 bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark shadow-sm">
                             <div class="flex justify-between items-start mb-2">
@@ -806,14 +836,14 @@
                             <div class="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-xl transition border-b border-slate-100 dark:border-slate-800">
                                 <div class="flex items-center gap-4">
                                     <div class="size-10 rounded-full bg-success/10 text-success flex items-center justify-center shrink-0"><span class="material-symbols-outlined">south_west</span></div>
-                                    <div><p class="font-bold text-sm dark:text-white">รับเงินจาก Escrow (#ORD-992104)</p><p class="text-xs text-slate-500">14 ต.ค. 2566</p></div>
+                                    <div><p class="font-bold text-sm dark:text-white">รับเงินจาก Escrow (#ORD-992104)</p><p class="text-xs text-slate-500">14 ต.ค. 2569</p></div>
                                 </div>
                                 <span class="font-bold text-success">+ ฿116,400.00</span>
                             </div>
                              <div class="p-4 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-xl transition">
                                 <div class="flex items-center gap-4">
                                     <div class="size-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 flex items-center justify-center shrink-0"><span class="material-symbols-outlined">north_east</span></div>
-                                    <div><p class="font-bold text-sm dark:text-white">ถอนเงินเข้าบัญชี กสิกรไทย</p><p class="text-xs text-slate-500">10 ต.ค. 2566</p></div>
+                                    <div><p class="font-bold text-sm dark:text-white">ถอนเงินเข้าบัญชี กสิกรไทย</p><p class="text-xs text-slate-500">10 ต.ค. 2569</p></div>
                                 </div>
                                 <span class="font-bold text-slate-900 dark:text-white">- ฿20,000.00</span>
                             </div>
@@ -948,13 +978,20 @@
                 }
             },
 
+            setRating(el) {
+                const stars = [...document.querySelectorAll('.rev-star')];
+                const n = stars.indexOf(el) + 1;
+                this.state.reviewRating = n;
+                stars.forEach((st, i) => { st.classList.toggle('icon-fill', i < n); st.classList.toggle('opacity-30', i >= n); });
+            },
+
             submitReview() {
                 const id = document.getElementById('rev-order-id').value;
                 const comment = document.getElementById('rev-comment').value;
                 const o = this.state.orders.find(x => x.id === id);
                 if(o) o.isReviewed = true;
                 
-                this.state.reviews.unshift({ id: 'R'+Date.now(), buyer: 'คุณ (ผู้ซื้อ)', rating: 5, comment: comment||'ดีมาก', date: 'วันนี้', reported: false});
+                this.state.reviews.unshift({ id: 'R'+Date.now(), buyer: 'คุณ (ผู้ซื้อ)', rating: this.state.reviewRating||5, comment: comment||'ดีมาก', date: 'วันนี้', reported: false});
                 this.closeModal('modal-review');
                 this.showToast('ส่งรีวิวสำเร็จ', 'success');
                 this.render();
@@ -1152,11 +1189,11 @@
                             <p class="text-sm text-slate-500 mb-6">รีวิวของคุณช่วยสร้างสังคมที่น่าเชื่อถือบน Munjai</p>
                             <input type="hidden" id="rev-order-id">
                             <div class="flex justify-center gap-2 mb-6 text-warning">
-                                <span class="material-symbols-outlined icon-fill text-4xl cursor-pointer">star</span>
-                                <span class="material-symbols-outlined icon-fill text-4xl cursor-pointer">star</span>
-                                <span class="material-symbols-outlined icon-fill text-4xl cursor-pointer">star</span>
-                                <span class="material-symbols-outlined icon-fill text-4xl cursor-pointer">star</span>
-                                <span class="material-symbols-outlined icon-fill text-4xl cursor-pointer">star</span>
+                                <span class="material-symbols-outlined icon-fill text-4xl cursor-pointer rev-star transition hover:scale-110" onclick="app.setRating(this)">star</span>
+                                <span class="material-symbols-outlined icon-fill text-4xl cursor-pointer rev-star transition hover:scale-110" onclick="app.setRating(this)">star</span>
+                                <span class="material-symbols-outlined icon-fill text-4xl cursor-pointer rev-star transition hover:scale-110" onclick="app.setRating(this)">star</span>
+                                <span class="material-symbols-outlined icon-fill text-4xl cursor-pointer rev-star transition hover:scale-110" onclick="app.setRating(this)">star</span>
+                                <span class="material-symbols-outlined icon-fill text-4xl cursor-pointer rev-star transition hover:scale-110" onclick="app.setRating(this)">star</span>
                             </div>
                             <textarea id="rev-comment" rows="3" placeholder="พิมพ์รีวิวสั้นๆ..." class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-4 outline-none focus:border-warning dark:text-white mb-6"></textarea>
                             <button onclick="app.submitReview()" class="w-full py-3 bg-warning text-white font-bold rounded-xl hover:bg-warning/90 shadow-lg shadow-warning/20">ส่งรีวิว</button>
